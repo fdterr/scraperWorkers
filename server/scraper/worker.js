@@ -1,6 +1,6 @@
 const ProxyVerifier = require('proxy-verifier');
 const {parentPort, workerData} = require('worker_threads');
-const util = require('util');
+// const util = require('util');
 
 const checkIP = ipAddress => {
   return new Promise((resolve, reject) => {
@@ -28,9 +28,10 @@ const checkIP = ipAddress => {
 };
 
 let {list} = workerData;
-if (list) {
-  for (let i = 0; i < list.length; i++) {
-    (async () => {
+(async () => {
+  if (list) {
+    for (let i = 0; i < list.length; i++) {
+      // (async () => {
       // console.log(`${workerData.id} checking ${list[i]}`);
       let result = await checkIP(list[i]);
       // console.log(`checked ${list[i]}`);
@@ -38,6 +39,8 @@ if (list) {
       if (result) {
         parentPort.postMessage({ip: list[i], result});
       }
-    })();
+      // })();
+    }
   }
-}
+  parentPort.postMessage(`thread ${workerData.id} done`);
+})();

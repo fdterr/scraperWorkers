@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const {Worker} = require('worker_threads');
+const {Proxy} = require('../db/models');
 
 let page = '';
 
@@ -24,8 +25,47 @@ const scrape = async () => {
         list: chunkArrays[i]
       }
     });
-    w.on('message', msg => {
-      console.log('message is', msg);
+    w.on('message', async msg => {
+      if (msg.ip) {
+        let result = msg.result;
+        let tests = result.protocols;
+
+        let host = msg.ip.split(':')[0];
+        let port = msg.ip.split(':')[1];
+
+        let level = result.anonymityLevel;
+        let http = tests.http.ok;
+        let https = tests.https.ok;
+        let socks5 = tests.socks5.ok;
+        let socks4 = tests.socks4.ok;
+
+        let tunnel = result.tunnel.ok;
+
+        let newProxy = {
+          host,
+          port,
+          level,
+          http,
+          https,
+          socks5,
+          socks4,
+          tunnel
+        };
+        // console.log(msg);
+        // console.log('new proxy is', newProxy);
+        // if (newProxy.host === null) {
+        //   console.log('new proxy is', newProxy);
+        // }
+        try {
+          await Proxy.create(newProxy);
+          console.log('created');
+        } catch (err) {
+          console.error(err);
+          // console.log('there was an error on IP:', msg);
+        }
+      } else {
+        console.log(msg);
+      }
     });
   }
 

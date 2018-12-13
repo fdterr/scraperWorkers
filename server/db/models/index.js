@@ -1,5 +1,7 @@
-const User = require('./user')
+const User = require('./user');
+const Proxy = require('./proxy');
 
 module.exports = {
-  User
-}
+  User,
+  Proxy
+};
