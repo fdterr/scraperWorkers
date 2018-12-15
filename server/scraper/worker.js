@@ -29,18 +29,24 @@ const checkIP = ipAddress => {
 
 let {list} = workerData;
 (async () => {
+  parentPort.postMessage(`thread ${workerData.id} started`);
   if (list) {
     for (let i = 0; i < list.length; i++) {
-      // (async () => {
       // console.log(`${workerData.id} checking ${list[i]}`);
       let result = await checkIP(list[i]);
-      // console.log(`checked ${list[i]}`);
+      console.log(
+        `thread ${workerData.id} checked ${list[i]}, ${list.length -
+          i -
+          1} remaining`
+      );
       // console.log(result);
       if (result) {
         parentPort.postMessage({ip: list[i], result});
       }
       // })();
     }
+  } else {
+    console.log(`no IPs allocated to thread ${workerData.id}`);
   }
   parentPort.postMessage(`thread ${workerData.id} done`);
 })();
