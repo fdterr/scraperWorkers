@@ -1,4 +1,4 @@
-const ProxyVerifier = require('proxy-verifier');
+// const ProxyVerifier = require('proxy-verifier');
 const {parentPort, workerData} = require('worker_threads');
 const checkProxy = require('check-proxy').check;
 
