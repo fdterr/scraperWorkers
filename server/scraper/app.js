@@ -45,8 +45,8 @@ const spysOne = async () => {
       let match = iT.match(regex);
       return match;
     });
-    // console.log('returning', ipAddresses);
-    // return ipAddresses;
+    await page.close();
+    return ipAddresses;
     return [
       '208.255.136.111:9999',
       '199.254.222.105:80',
@@ -690,6 +690,7 @@ const spysOne = async () => {
 };
 
 function chunkArray(myArray, chunk_size) {
+  // splits myArray into a chunk_size # of arrays (if chunk_size == 100, will return 100 small arrays)
   var results = [];
 
   while (myArray.length) {
@@ -709,20 +710,23 @@ const createWorker = (id, ipAddress) => {
   });
 
   w.on('message', async msg => {
-    if (msg.ip) {
-      let newP = newProxy(msg);
-      try {
-        let result = await Proxy.findOrCreate({
-          where: {host: newP.host},
-          defaults: newP
-        });
-        if (result[1] === false) {
-          await result[0].update(newP);
-        } else {
-        }
-      } catch (err) {
-        console.error(err);
-      }
+    if (!msg.error) {
+      // let newP = newProxy(msg);
+      // try {
+      //   let result = await Proxy.findOrCreate({
+      //     where: {host: newP.host},
+      //     defaults: newP
+      //   });
+      //   if (result[1] === false) {
+      //     await result[0].update(newP);
+      //   } else {
+      //   }
+      // } catch (err) {
+      //   console.error(err);
+      // }
+      console.log('main thread: good: ', msg);
+    } else {
+      console.log('main thread: error: ', msg);
     }
     let worker = workers[msg.id];
     let nextIP = '';
@@ -738,7 +742,7 @@ const createWorker = (id, ipAddress) => {
       }
     }
     let currLength = spysOneProxies.length;
-    console.log('received a message, spysoNeProxies length is', currLength);
+    // console.log('received a message, spysoNeProxies length is', currLength);
   });
 
   return w;
@@ -748,7 +752,7 @@ const scrape = async () => {
   // launch browser
   const browser = await puppeteer.launch(
     // {args: ['--no-sandbox', '--disable-setuid-sandbox', '--ignoreHTTPSErrors'],}
-    {ignoreHTTPSErrors: true}
+    {ignoreHTTPSErrors: true, headless: false}
   );
   page = await browser.newPage();
   page.on('console', consoleObj => {
@@ -757,6 +761,7 @@ const scrape = async () => {
 
   // grab spysOne proxies
   let arr = await spysOne();
+  await browser.close();
 
   // copy to global array
   for (let i = 0; i < arr.length; i++) {
@@ -765,12 +770,12 @@ const scrape = async () => {
   console.log(spysOneProxies);
 
   // let threads = spysOneProxies.length;
-  let threads = 100;
+  let threads = 1;
   let length = spysOneProxies.length;
 
   console.log(`length is ${length}`);
 
-  for (let i = 0; i < threads - 1; i++) {
+  for (let i = 0; i < threads; i++) {
     let ipAddress = spysOneProxies.shift();
     let newWorker = createWorker(i, ipAddress);
     workers.push(newWorker);
