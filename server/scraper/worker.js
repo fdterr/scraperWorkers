@@ -92,7 +92,17 @@ const verifyProxy = proxy => {
       // console.log('error!', err);
       // console.log('-----');
       let ipAddress = proxy.proxyIP + ':' + proxy.proxyPort;
-      parentPort.postMessage({id: workerData.id, ...err, ipAddress});
+      let returnValue = {
+        id: workerData.id,
+        error: err,
+        ipAddress
+      };
+      parentPort.postMessage({
+        id: workerData.id,
+        err: err.toString(),
+        ipAddress
+      });
+      // parentPort.postMessage(returnValue);
     }
   );
 };

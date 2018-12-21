@@ -710,6 +710,7 @@ const createWorker = (id, ipAddress) => {
   });
 
   w.on('message', async msg => {
+    let currLength = spysOneProxies.length;
     if (!msg.err) {
       // let newP = newProxy(msg);
       // try {
@@ -728,6 +729,7 @@ const createWorker = (id, ipAddress) => {
     } else {
       console.log('main thread: error: ', msg.ipAddress);
     }
+    // console.log('received a message, spysoNeProxies length is', currLength);
     let worker = workers[msg.id];
     let nextIP = '';
     if (spysOneProxies.length > 0) {
@@ -737,12 +739,7 @@ const createWorker = (id, ipAddress) => {
       worker.terminate();
       workerCount--;
       console.log(`${workerCount} workers remaining`);
-      if (workerCount === 0) {
-        browser.close();
-      }
     }
-    let currLength = spysOneProxies.length;
-    // console.log('received a message, spysoNeProxies length is', currLength);
   });
 
   return w;
@@ -767,7 +764,7 @@ const scrape = async () => {
   for (let i = 0; i < arr.length; i++) {
     spysOneProxies.push(arr[i]);
   }
-  console.log(spysOneProxies);
+  // console.log(spysOneProxies);
 
   // let threads = spysOneProxies.length;
   let threads = 10;
