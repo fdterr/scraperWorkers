@@ -51,7 +51,8 @@ const createProxy = ipAddress => {
 const verifyProxy = proxy => {
   checkProxy({
     ...proxy,
-    testHost: 'http://localhost:8080/api/proxy/ping',
+    // testHost: 'http://localhost:8080/api/proxy/ping',
+    testHost: '204.48.22.234/api/proxy/ping',
     localIP: '65.88.88.177',
     connectTimeout: 6,
     timeout: 10,

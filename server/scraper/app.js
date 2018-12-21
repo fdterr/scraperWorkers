@@ -710,7 +710,7 @@ const createWorker = (id, ipAddress) => {
   });
 
   w.on('message', async msg => {
-    if (!msg.error) {
+    if (!msg.err) {
       // let newP = newProxy(msg);
       // try {
       //   let result = await Proxy.findOrCreate({
@@ -724,9 +724,9 @@ const createWorker = (id, ipAddress) => {
       // } catch (err) {
       //   console.error(err);
       // }
-      console.log('main thread: good: ', msg);
+      console.log('main thread: good: ', msg.ipAddress);
     } else {
-      console.log('main thread: error: ', msg);
+      console.log('main thread: error: ', msg.ipAddress);
     }
     let worker = workers[msg.id];
     let nextIP = '';
@@ -770,7 +770,7 @@ const scrape = async () => {
   console.log(spysOneProxies);
 
   // let threads = spysOneProxies.length;
-  let threads = 1;
+  let threads = 10;
   let length = spysOneProxies.length;
 
   console.log(`length is ${length}`);
