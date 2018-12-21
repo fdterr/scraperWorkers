@@ -752,7 +752,7 @@ const scrape = async () => {
   // launch browser
   const browser = await puppeteer.launch(
     // {args: ['--no-sandbox', '--disable-setuid-sandbox', '--ignoreHTTPSErrors'],}
-    {ignoreHTTPSErrors: true, headless: false}
+    {ignoreHTTPSErrors: true, headless: true}
   );
   page = await browser.newPage();
   page.on('console', consoleObj => {
