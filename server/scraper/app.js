@@ -46,7 +46,8 @@ const spysOne = async () => {
       return match;
     });
     await page.close();
-    return ipAddresses;
+    // return ipAddresses;
+    return ['103.15.51.160:8080', '115.78.235.164:80'];
     return [
       '208.255.136.111:9999',
       '199.254.222.105:80',
@@ -725,7 +726,7 @@ const createWorker = (id, ipAddress) => {
       // } catch (err) {
       //   console.error(err);
       // }
-      console.log('main thread: good: ', msg.ipAddress);
+      console.log('main thread: good: ', msg);
     } else {
       console.log('main thread: error: ', msg.ipAddress);
     }

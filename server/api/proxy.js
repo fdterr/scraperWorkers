@@ -15,6 +15,7 @@ if (typeof ipaddress === 'undefined') {
 const ping = (req, res) => {
   console.log('ip', req.connection.remoteAddress);
   console.log('headers', req.headers);
+  console.log('query', req.query);
   console.log('cookies', req.cookies);
   res.json(getProxyType(req.headers, req.query, req.body, req.cookies));
 };

@@ -35,7 +35,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.15.3",
-    "check-proxy": "^0.3.3",
+    "check-proxy": "https://github.com/fdterr/check-proxy/tarball/master",
     "compression": "^1.7.3",
     "connect-session-sequelize": "^4.1.0",
     "cookie-parser": "^1.4.3",
