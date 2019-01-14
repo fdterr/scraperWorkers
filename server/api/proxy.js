@@ -1,5 +1,6 @@
 const getProxyType = require('check-proxy').ping;
 const router = require('express').Router();
+var _ = require('lodash');
 module.exports = router;
 
 let ipaddress = process.env.OPENSHIFT_NODEJS_IP;
@@ -14,7 +15,10 @@ if (typeof ipaddress === 'undefined') {
 
 const ping = (req, res) => {
   console.log('ip', req.connection.remoteAddress);
-  console.log('headers', req.headers);
+  let headers = _(req.headers).reduce(function(result, el) {
+    return result + el;
+  });
+  console.log('headers', headers);
   console.log('query', req.query);
   console.log('cookies', req.cookies);
   res.json(getProxyType(req.headers, req.query, req.body, req.cookies));
