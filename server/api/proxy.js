@@ -1,3 +1,4 @@
+const checkProxy = require('../scraper/app');
 const getProxyType = require('check-proxy').ping;
 const router = require('express').Router();
 var _ = require('lodash');
@@ -23,6 +24,14 @@ const ping = (req, res) => {
   console.log('cookies', req.cookies);
   res.json(getProxyType(req.headers, req.query, req.body, req.cookies));
 };
+
+router.post('/check', async (req, res, next) => {
+  try {
+    console.log('request body is', req.body);
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.get('/ping', ping);
 router.post('/ping', ping);

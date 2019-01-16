@@ -7,20 +7,31 @@ const spysOneProxies = [];
 const workers = [];
 let workerCount = 0;
 
+let scannedProxies = [];
+
 const newProxy = msg => {
-  let result = msg.result;
-  let tests = result.protocols;
+  console.log('message is', msg);
+  // let result = msg.result;
+  // let tests = result.protocols;
 
-  let host = msg.ip.split(':')[0];
-  let port = msg.ip.split(':')[1];
+  // let host = msg.ip.split(':')[0];
+  // let port = msg.ip.split(':')[1];
 
-  let level = result.anonymityLevel;
-  let http = tests.http.ok;
-  let https = tests.https.ok;
-  let socks5 = tests.socks5.ok;
-  let socks4 = tests.socks4.ok;
+  // let level = result.anonymityLevel;
+  // let http = tests.http.ok;
+  // let https = tests.https.ok;
+  // let socks5 = tests.socks5.ok;
+  // let socks4 = tests.socks4.ok;
 
-  let tunnel = result.tunnel.ok;
+  // let tunnel = result.tunnel.ok;
+
+  let host = msg[0].ip;
+  let port = msg[0].port;
+  let level = msg[0].anonymityLevel;
+  let https = msg[0].supportsHttps;
+  let http = msg[0].protocol === 'http';
+  let socks4 = msg[0].protocol === 'socks4';
+  let socks5 = msg[0].protocol === 'socks5';
 
   let newP = {
     host,
@@ -28,9 +39,10 @@ const newProxy = msg => {
     level,
     http,
     https,
-    socks5,
     socks4,
-    tunnel
+    socks5,
+    socks4
+    // tunnel
   };
 
   return newP;
@@ -48,6 +60,13 @@ const spysOne = async () => {
     await page.close();
     // return ipAddresses;
     // return ['103.15.51.160:8080', '115.78.235.164:80'];
+    return [
+      '139.180.228.42:1080',
+      '167.160.64.164:1080',
+      '167.160.72.144:1080',
+      '196.17.197.61:1080',
+      '196.19.0.97:1080'
+    ];
     return [
       '208.255.136.111:9999',
       '199.254.222.105:80',
@@ -692,7 +711,7 @@ const spysOne = async () => {
 
 function chunkArray(myArray, chunk_size) {
   // splits myArray into a chunk_size # of arrays (if chunk_size == 100, will return 100 small arrays)
-  var results = [];
+  let results = [];
 
   while (myArray.length) {
     results.push(myArray.splice(0, chunk_size));
@@ -702,7 +721,6 @@ function chunkArray(myArray, chunk_size) {
 }
 
 const createWorker = (id, ipAddress) => {
-  // console.log(`new worker id:${id}, ipAddress:${ipAddress}`);
   let w = new Worker(__dirname + '/worker.js', {
     workerData: {
       id,
@@ -711,9 +729,9 @@ const createWorker = (id, ipAddress) => {
   });
 
   w.on('message', async msg => {
-    let currLength = spysOneProxies.length;
     if (!msg.err) {
-      // let newP = newProxy(msg);
+      let newP = newProxy(msg);
+      scannedProxies.push(newP);
       // try {
       //   let result = await Proxy.findOrCreate({
       //     where: {host: newP.host},
@@ -726,11 +744,10 @@ const createWorker = (id, ipAddress) => {
       // } catch (err) {
       //   console.error(err);
       // }
-      console.log('main thread: good: ', msg);
+      console.log('main thread: good: ', newP);
     } else {
       console.log('main thread: error: ', msg.ipAddress);
     }
-    // console.log('received a message, spysoNeProxies length is', currLength);
     let worker = workers[msg.id];
     let nextIP = '';
     if (spysOneProxies.length > 0) {
@@ -740,6 +757,9 @@ const createWorker = (id, ipAddress) => {
       worker.terminate();
       workerCount--;
       console.log(`${workerCount} workers remaining`);
+      if (workerCount === 0) {
+        console.log('good proxies are:', scannedProxies);
+      }
     }
   });
 
@@ -768,7 +788,7 @@ const scrape = async () => {
   // console.log(spysOneProxies);
 
   // let threads = spysOneProxies.length;
-  let threads = 100;
+  let threads = Math.min(spysOneProxies.length, 100);
   let length = spysOneProxies.length;
 
   console.log(`length is ${length}`);
@@ -781,15 +801,32 @@ const scrape = async () => {
   }
 };
 
-function fireLaser() {
-  checkElement('.row:nth-child(1) > .col-2 > a')
-    .then(() => {
-      let element = document.querySelector('.row:nth-child(1) > .col-2 > a');
-      element.click();
-    })
-    .then(() => {
-      sleep(3000).then(fireLaser());
-    });
-}
+const check = proxies => {
+  try {
+    let threads = Math.min(proxies.length, 100);
+    let length = proxies.length;
 
-scrape();
+    console.log(`length is ${length}`);
+
+    for (let i = 0; i < threads; i++) {
+      let ipAddress = proxies.shift();
+      let newWorker = createWorker(i, ipAddress);
+      workers.push(newWorker);
+      workerCount++;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// scrape();
+
+// check([
+//   '139.180.228.42:1080',
+//   '167.160.64.164:1080',
+//   '167.160.72.144:1080',
+//   '196.17.197.61:1080',
+//   '196.19.0.97:1080'
+// ]);
+
+module.exports = check;
