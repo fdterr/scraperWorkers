@@ -753,9 +753,9 @@ const scrape = async () => {
     {ignoreHTTPSErrors: true, headless: true}
   );
   page = await browser.newPage();
-  page.on('console', consoleObj => {
-    console.log(consoleObj.text());
-  });
+  // page.on('console', consoleObj => {
+  //   console.log(consoleObj.text());
+  // });
 
   // grab spysOne proxies
   let arr = await spysOne();
@@ -768,7 +768,7 @@ const scrape = async () => {
   // console.log(spysOneProxies);
 
   // let threads = spysOneProxies.length;
-  let threads = 10;
+  let threads = 100;
   let length = spysOneProxies.length;
 
   console.log(`length is ${length}`);
@@ -780,5 +780,16 @@ const scrape = async () => {
     workerCount++;
   }
 };
+
+function fireLaser() {
+  checkElement('.row:nth-child(1) > .col-2 > a')
+    .then(() => {
+      let element = document.querySelector('.row:nth-child(1) > .col-2 > a');
+      element.click();
+    })
+    .then(() => {
+      sleep(3000).then(fireLaser());
+    });
+}
 
 scrape();
