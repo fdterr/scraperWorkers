@@ -62,11 +62,11 @@ const verifyProxy = proxy => {
         url: 'http://www.example.com/',
         regex: /example/gim // expected result - regex
       },
-      {
-        name: 'yandex',
-        url: 'http://www.yandex.ru/',
-        regex: /yandex/gim // expected result - regex
-      },
+      // {
+      //   name: 'yandex',
+      //   url: 'http://www.yandex.ru/',
+      //   regex: /yandex/gim // expected result - regex
+      // },
       {
         name: 'google',
         url: 'http://www.google.com/',
