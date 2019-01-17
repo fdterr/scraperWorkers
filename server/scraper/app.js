@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+// const puppeteer = require('puppeteer');
 const {Worker, parentPort} = require('worker_threads');
 const {Proxy} = require('../db/models');
 

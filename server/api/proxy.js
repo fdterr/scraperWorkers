@@ -1,4 +1,3 @@
-const checkProxy = require('../scraper/app');
 const getProxyType = require('check-proxy').ping;
 const router = require('express').Router();
 var _ = require('lodash');
@@ -27,6 +26,7 @@ const ping = (req, res) => {
 
 router.post('/check', async (req, res, next) => {
   try {
+    const checkProxy = require('../scraper/app');
     console.log('request body is', req.body);
     checkProxy(req.body.proxies, res);
   } catch (err) {
