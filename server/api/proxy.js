@@ -28,6 +28,16 @@ const ping = (req, res) => {
 router.post('/check', async (req, res, next) => {
   try {
     console.log('request body is', req.body);
+    checkProxy(
+      [
+        '139.180.228.42:1080',
+        '167.160.64.164:1080',
+        '167.160.72.144:1080',
+        '196.17.197.61:1080',
+        '196.19.0.97:1080'
+      ],
+      res
+    );
   } catch (err) {
     next(err);
   }
