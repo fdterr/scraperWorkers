@@ -764,6 +764,7 @@ const createWorker = (id, ipAddress) => {
       console.log(`${workerCount} workers remaining`);
       if (workerCount === 0) {
         console.log('good proxies are:', scannedProxies);
+        workers.splice(0, workers.length);
         response.send(scannedProxies);
       }
     }
@@ -812,7 +813,6 @@ const check = (proxies, res) => {
     let threads = Math.min(proxies.length, 100);
     let length = proxies.length;
     response = res;
-    // console.log('res is', response);
     console.log(`length is ${length}`);
 
     for (let i = 0; i < proxies.length; i++) {
