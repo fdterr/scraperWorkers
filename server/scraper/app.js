@@ -1,56 +1,8 @@
 // const puppeteer = require('puppeteer');
-const {Worker, parentPort} = require('worker_threads');
 const {Proxy} = require('../db/models');
 const checkProxy = require('check-proxy').check;
 
 let page = '';
-const spysOneProxies = [];
-const toScan = [];
-const workers = [];
-let workerCount = 0;
-
-let scannedProxies = [];
-
-let response = {};
-
-const newProxy = msg => {
-  // console.log('message is', msg);
-  // let result = msg.result;
-  // let tests = result.protocols;
-
-  // let host = msg.ip.split(':')[0];
-  // let port = msg.ip.split(':')[1];
-
-  // let level = result.anonymityLevel;
-  // let http = tests.http.ok;
-  // let https = tests.https.ok;
-  // let socks5 = tests.socks5.ok;
-  // let socks4 = tests.socks4.ok;
-
-  // let tunnel = result.tunnel.ok;
-
-  let host = msg[0].ip;
-  let port = msg[0].port;
-  let level = msg[0].anonymityLevel;
-  let https = msg[0].supportsHttps;
-  let http = msg[0].protocol === 'http';
-  let socks4 = msg[0].protocol === 'socks4';
-  let socks5 = msg[0].protocol === 'socks5';
-
-  let newP = {
-    host,
-    port,
-    level,
-    http,
-    https,
-    socks4,
-    socks5,
-    socks4
-    // tunnel
-  };
-
-  return newP;
-};
 
 const spysOne = async () => {
   try {
@@ -715,65 +667,6 @@ const spysOne = async () => {
   }
 };
 
-function chunkArray(myArray, chunk_size) {
-  // splits myArray into a chunk_size # of arrays (if chunk_size == 100, will return 100 small arrays)
-  let results = [];
-
-  while (myArray.length) {
-    results.push(myArray.splice(0, chunk_size));
-  }
-
-  return results;
-}
-
-const createWorker = (id, ipAddress) => {
-  let w = new Worker(__dirname + '/worker.js', {
-    workerData: {
-      id,
-      ipAddress
-    }
-  });
-
-  w.on('message', async msg => {
-    if (!msg.err) {
-      let newP = newProxy(msg);
-      scannedProxies.push(newP);
-      // try {
-      //   let result = await Proxy.findOrCreate({
-      //     where: {host: newP.host},
-      //     defaults: newP
-      //   });
-      //   if (result[1] === false) {
-      //     await result[0].update(newP);
-      //   } else {
-      //   }
-      // } catch (err) {
-      //   console.error(err);
-      // }
-      // console.log('main thread: good: ', msg);
-    } else {
-      // console.log('main thread: error: ', msg.ipAddress);
-    }
-    let worker = workers[msg.id];
-    let nextIP = '';
-    if (toScan.length > 0) {
-      nextIP = toScan.shift();
-      worker.postMessage(nextIP);
-    } else {
-      worker.terminate();
-      workerCount--;
-      console.log(`${workerCount} workers remaining`);
-      if (workerCount === 0) {
-        console.log('good proxies are:', scannedProxies);
-        workers.splice(0, workers.length);
-        response.send(scannedProxies);
-      }
-    }
-  });
-
-  return w;
-};
-
 const scrape = async () => {
   // launch browser
   const browser = await puppeteer.launch(
@@ -807,74 +700,41 @@ const scrape = async () => {
   }
 };
 
-// const check = (proxies, res, session) => {
-//   try {
-//     let threads = Math.min(proxies.length, 100);
-//     let length = proxies.length;
-//     response = res;
+function chunkArray(myArray, chunk_size) {
+  // splits myArray into a chunk_size # of arrays (if chunk_size == 100, will return 100 small arrays)
+  let results = [];
 
-//     for (let i = 0; i < proxies.length; i++) {
-//       toScan.push(proxies[i]);
-//     }
+  while (myArray.length) {
+    results.push(myArray.splice(0, chunk_size));
+  }
 
-//     for (let i = 0; i < threads; i++) {
-//       let ipAddress = proxies.shift();
-//       let newWorker = createWorker(i, ipAddress);
-//       workers.push(newWorker);
-//       workerCount++;
-//     }
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
+  return results;
+}
 
 const check = async (proxies, res, session) => {
   try {
-    // let threads = Math.min(proxies.length, 100);
     let length = proxies.length;
     response = res;
     console.log(`length is ${length}`);
     console.log('session is', session);
 
-    // const results = [];
     const scopeScan = proxies;
 
     const results = scopeScan.map(proxy => {
       let newProxy = createProxy(proxy);
-      // let scanResult;
-      // console.log(`testing proxy ${newProxy} now`);
       console.log('testing proxy', newProxy);
       const scanResult = verifyProxy(newProxy);
-      // const scanResult = proxyHelper(proxy);
-      // let scanResult;
-      // verifyProxy(proxy).then(async result => {
-      //   scanResult = await result;
-      // });
-      // .then(result => {
-      //   console.log(`we have a result, ${result}`);
-      //   scanResult = result;
-      // })
-      // .catch(err => {
-      //   console.log(`we have an error ${err}`);
-      //   scanResult = err;
-      // });
       console.log('scan result is', scanResult);
-      // results.push(scanResult);
       return scanResult;
     });
 
     let promiseResult = [];
     await Promise.all(results);
-    // promiseResult.then(data => {
-    //   res.send(JSON.stringify(data));
-    // });
-    // let returnResults = [];
     for (let i = 0; i < results.length; i++) {
-      // promiseResult.push((await results[i]).toString());
       promiseResult.push(await results[i]);
     }
     console.log('results are', promiseResult);
-    // console.log('returnResults are', returnResults);
+    console.log('returnResults are', returnResults);
     // res.send(promiseResult);
     return promiseResult;
   } catch (err) {
@@ -926,11 +786,11 @@ const verifyProxy = async proxy => {
         }
       ]
     });
-    // console.log('result is', result);
+    console.log('result is', result);
     // return JSON.stringify({result, proxy});
     return {result, proxy};
   } catch (err) {
-    // console.log('caught an error', err);
+    console.log('caught an error', err);
     // return JSON.stringify({error: err, proxy});
     return {err, proxy};
   }
@@ -999,14 +859,73 @@ const proxyHelper = async proxy => {
   }
 };
 
-// scrape();
-
-// check([
-//   '139.180.228.42:1080',
-//   '167.160.64.164:1080',
-//   '167.160.72.144:1080',
-//   '196.17.197.61:1080',
-//   '196.19.0.97:1080'
-// ]);
-
 module.exports = check;
+
+// const check = (proxies, res, session) => {
+//   try {
+//     let threads = Math.min(proxies.length, 100);
+//     let length = proxies.length;
+//     response = res;
+
+//     for (let i = 0; i < proxies.length; i++) {
+//       toScan.push(proxies[i]);
+//     }
+
+//     for (let i = 0; i < threads; i++) {
+//       let ipAddress = proxies.shift();
+//       let newWorker = createWorker(i, ipAddress);
+//       workers.push(newWorker);
+//       workerCount++;
+//     }
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+
+// const createWorker = (id, ipAddress) => {
+//   let w = new Worker(__dirname + '/worker.js', {
+//     workerData: {
+//       id,
+//       ipAddress
+//     }
+//   });
+
+//   w.on('message', async msg => {
+//     if (!msg.err) {
+//       let newP = newProxy(msg);
+//       scannedProxies.push(newP);
+//       // try {
+//       //   let result = await Proxy.findOrCreate({
+//       //     where: {host: newP.host},
+//       //     defaults: newP
+//       //   });
+//       //   if (result[1] === false) {
+//       //     await result[0].update(newP);
+//       //   } else {
+//       //   }
+//       // } catch (err) {
+//       //   console.error(err);
+//       // }
+//       // console.log('main thread: good: ', msg);
+//     } else {
+//       // console.log('main thread: error: ', msg.ipAddress);
+//     }
+//     let worker = workers[msg.id];
+//     let nextIP = '';
+//     if (toScan.length > 0) {
+//       nextIP = toScan.shift();
+//       worker.postMessage(nextIP);
+//     } else {
+//       worker.terminate();
+//       workerCount--;
+//       console.log(`${workerCount} workers remaining`);
+//       if (workerCount === 0) {
+//         console.log('good proxies are:', scannedProxies);
+//         workers.splice(0, workers.length);
+//         response.send(scannedProxies);
+//       }
+//     }
+//   });
+
+//   return w;
+// };
