@@ -925,7 +925,7 @@ const verifyProxy = async proxy => {
       ]
     });
     // console.log('result is', result);
-    return result;
+    return JSON.stringify({result, proxy});
   } catch (err) {
     // console.log('caught an error', err);
     return JSON.stringify({error: err, proxy});
