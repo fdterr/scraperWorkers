@@ -749,9 +749,9 @@ const createWorker = (id, ipAddress) => {
       // } catch (err) {
       //   console.error(err);
       // }
-      // console.log('main thread: good: ', msg);
+      console.log('main thread: good: ', msg);
     } else {
-      // console.log('main thread: error: ', msg.ipAddress);
+      console.log('main thread: error: ', msg.ipAddress);
     }
     let worker = workers[msg.id];
     let nextIP = '';
@@ -808,12 +808,13 @@ const scrape = async () => {
   }
 };
 
-const check = (proxies, res) => {
+const check = (proxies, res, session) => {
   try {
     let threads = Math.min(proxies.length, 100);
     let length = proxies.length;
     response = res;
     console.log(`length is ${length}`);
+    console.log(`session is ${session}`);
 
     for (let i = 0; i < proxies.length; i++) {
       toScan.push(proxies[i]);

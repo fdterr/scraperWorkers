@@ -26,9 +26,10 @@ const ping = (req, res) => {
 
 router.post('/check', async (req, res, next) => {
   try {
-    const checkProxy = require('../scraper/app');
-    console.log('request body is', req.body);
-    checkProxy(req.body.proxies, res);
+    const checkProxy =  require('../scraper/app');
+    const cP1 = clone(checkProxy);
+    console.log('request body is', req.body, req.session);
+    cP1(req.body.proxies, res);
   } catch (err) {
     next(err);
   }
@@ -36,3 +37,12 @@ router.post('/check', async (req, res, next) => {
 
 router.get('/ping', ping);
 router.post('/ping', ping);
+
+function clone(obj) {
+  if (null == obj || "object" != typeof obj) return obj;
+  var copy = obj.constructor();
+  for (var attr in obj) {
+      if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+  }
+  return copy;
+}
