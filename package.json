@@ -35,6 +35,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.15.3",
+    "babel-preset-es2015": "^6.24.1",
     "check-proxy": "https://github.com/fdterr/check-proxy/tarball/master",
     "compression": "^1.7.3",
     "connect-session-sequelize": "^4.1.0",

@@ -2,43 +2,6 @@
 const {parentPort, workerData} = require('worker_threads');
 const checkProxy = require('check-proxy').check;
 
-// const checkIP = ipAddress => {
-//   let split = ipAddress.split(':');
-//   let proxy = {
-//     ipAddress: split[0],
-//     port: split[1],
-//     protocols: ['http', 'https', 'socks4', 'socks5']
-//   };
-
-//   ProxyVerifier.testAll(proxy, (error, result) => {
-//     if (error) {
-//       parentPort.postMessage({
-//         ip: false,
-//         ...result,
-//         ...error,
-//         original: ipAddress,
-//         id: workerData.id
-//       });
-//     } else if (result.anonymityLevel != null) {
-//       // ONLY INSTANCE OF GOOD RESULT
-//       parentPort.postMessage({
-//         ip: ipAddress,
-//         result,
-//         original: ipAddress,
-//         id: workerData.id
-//       });
-//     } else {
-//       parentPort.postMessage({
-//         ip: false,
-//         ...result,
-//         ...error,
-//         original: ipAddress,
-//         id: workerData.id
-//       });
-//     }
-//   });
-// };
-
 const createProxy = ipAddress => {
   let split = ipAddress.split(':');
   let newProxy = {
@@ -83,14 +46,12 @@ const verifyProxy = proxy => {
     ]
   }).then(
     function(res) {
-      // console.log('good response', res);
-      // console.log('-----');
+      console.log('result', res);
       let ipAddress = proxy.proxyIP + ':' + proxy.proxyPort;
       parentPort.postMessage({id: workerData.id, ...res, ipAddress});
     },
     function(err) {
-      // console.log('error!', err);
-      // console.log('-----');
+      console.log('error', err);
       let ipAddress = proxy.proxyIP + ':' + proxy.proxyPort;
       let returnValue = {
         id: workerData.id,
@@ -102,7 +63,6 @@ const verifyProxy = proxy => {
         err: err.toString(),
         ipAddress
       });
-      // parentPort.postMessage(returnValue);
     }
   );
 };

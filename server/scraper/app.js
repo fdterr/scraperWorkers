@@ -1,6 +1,7 @@
 // const puppeteer = require('puppeteer');
 const {Worker, parentPort} = require('worker_threads');
 const {Proxy} = require('../db/models');
+const checkProxy = require('check-proxy').check;
 
 let page = '';
 const spysOneProxies = [];
@@ -792,9 +793,7 @@ const scrape = async () => {
   for (let i = 0; i < arr.length; i++) {
     spysOneProxies.push(arr[i]);
   }
-  // console.log(spysOneProxies);
 
-  // let threads = spysOneProxies.length;
   let threads = Math.min(spysOneProxies.length, 100);
   let length = spysOneProxies.length;
 
@@ -808,25 +807,190 @@ const scrape = async () => {
   }
 };
 
-const check = (proxies, res) => {
+// const check = (proxies, res, session) => {
+//   try {
+//     let threads = Math.min(proxies.length, 100);
+//     let length = proxies.length;
+//     response = res;
+
+//     for (let i = 0; i < proxies.length; i++) {
+//       toScan.push(proxies[i]);
+//     }
+
+//     for (let i = 0; i < threads; i++) {
+//       let ipAddress = proxies.shift();
+//       let newWorker = createWorker(i, ipAddress);
+//       workers.push(newWorker);
+//       workerCount++;
+//     }
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+
+const check = async (proxies, res, session) => {
   try {
-    let threads = Math.min(proxies.length, 100);
+    // let threads = Math.min(proxies.length, 100);
     let length = proxies.length;
     response = res;
     console.log(`length is ${length}`);
+    console.log('session is', session);
 
-    for (let i = 0; i < proxies.length; i++) {
-      toScan.push(proxies[i]);
-    }
+    // const results = [];
+    const scopeScan = proxies;
 
-    for (let i = 0; i < threads; i++) {
-      let ipAddress = proxies.shift();
-      let newWorker = createWorker(i, ipAddress);
-      workers.push(newWorker);
-      workerCount++;
+    const results = scopeScan.map(proxy => {
+      let newProxy = createProxy(proxy);
+      // let scanResult;
+      // console.log(`testing proxy ${newProxy} now`);
+      console.log('testing proxy', newProxy);
+      const scanResult = verifyProxy(newProxy);
+      // const scanResult = proxyHelper(proxy);
+      // let scanResult;
+      // verifyProxy(proxy).then(async result => {
+      //   scanResult = await result;
+      // });
+      // .then(result => {
+      //   console.log(`we have a result, ${result}`);
+      //   scanResult = result;
+      // })
+      // .catch(err => {
+      //   console.log(`we have an error ${err}`);
+      //   scanResult = err;
+      // });
+      console.log('scan result is', scanResult);
+      // results.push(scanResult);
+      return scanResult;
+    });
+
+    let promiseResult = [];
+    await Promise.all(results);
+    // promiseResult.then(data => {
+    //   res.send(JSON.stringify(data));
+    // });
+    // let returnResults = [];
+    for (let i = 0; i < results.length; i++) {
+      promiseResult.push((await results[i]).toString());
     }
+    console.log('results are', promiseResult);
+    // console.log('returnResults are', returnResults);
+    res.send(promiseResult);
   } catch (err) {
-    console.error(err);
+    console.log(err);
+  }
+};
+
+const createProxy = ipAddress => {
+  let split = ipAddress.split(':');
+  let newProxy = {
+    proxyIP: split[0],
+    proxyPort: split[1]
+  };
+  return newProxy;
+};
+
+const verifyProxy = async proxy => {
+  try {
+    const result = await checkProxy({
+      ...proxy,
+      // testHost: 'http://localhost:8080/api/proxy/ping',
+      testHost: '204.48.22.234/api/proxy/ping',
+      localIP: '108.54.113.21',
+      connectTimeout: 6,
+      timeout: 10,
+      websites: [
+        {
+          name: 'example',
+          url: 'http://www.example.com/',
+          regex: /example/gim // expected result - regex
+        },
+        // {
+        //   name: 'yandex',
+        //   url: 'http://www.yandex.ru/',
+        //   regex: /yandex/gim // expected result - regex
+        // },
+        {
+          name: 'google',
+          url: 'http://www.google.com/',
+          regex: function(html) {
+            // expected result - custom function
+            return html && html.indexOf('google') != -1;
+          }
+        },
+        {
+          name: 'amazon',
+          url: 'http://www.amazon.com/',
+          regex: 'Amazon' // expected result - look for this string in the output
+        }
+      ]
+    });
+    // console.log('result is', result);
+    return result;
+  } catch (err) {
+    // console.log('caught an error', err);
+    return JSON.stringify({error: err, proxy});
+  }
+
+  // return new Promise((resolve, reject) => {
+  //   checkProxy({
+  //     ...proxy,
+  //     testHost: 'http://localhost:8080/api/proxy/ping',
+  //     // testHost: '204.48.22.234/api/proxy/ping',
+  //     localIP: '65.88.88.177',
+  //     connectTimeout: 6,
+  //     timeout: 10,
+  //     websites: [
+  //       {
+  //         name: 'example',
+  //         url: 'http://www.example.com/',
+  //         regex: /example/gim // expected result - regex
+  //       },
+  //       // {
+  //       //   name: 'yandex',
+  //       //   url: 'http://www.yandex.ru/',
+  //       //   regex: /yandex/gim // expected result - regex
+  //       // },
+  //       {
+  //         name: 'google',
+  //         url: 'http://www.google.com/',
+  //         regex: function(html) {
+  //           // expected result - custom function
+  //           return html && html.indexOf('google') != -1;
+  //         }
+  //       },
+  //       {
+  //         name: 'amazon',
+  //         url: 'http://www.amazon.com/',
+  //         regex: 'Amazon' // expected result - look for this string in the output
+  //       }
+  //     ]
+  //   }).then(
+  //     function(res) {
+  //       let ipAddress = proxy.proxyIP + ':' + proxy.proxyPort;
+  //       resolve({id: workerData.id, ...res, ipAddress});
+  //     }.bind({resolve: resolve, reject: reject}),
+  //     function(err) {
+  //       let ipAddress = proxy.proxyIP + ':' + proxy.proxyPort;
+  //       resolve({
+  //         // id: workerData.id,
+  //         err: err.toString(),
+  //         ipAddress
+  //       });
+  //     }.bind({resolve: resolve, reject: reject})
+  //   );
+  // });
+};
+
+const proxyHelper = async proxy => {
+  try {
+    let helper;
+    await verifyProxy(proxy).then(async result => {
+      helper = result;
+    });
+    console.log('helper is', helper);
+    return await helper;
+  } catch (err) {
+    console.log(err);
   }
 };
 

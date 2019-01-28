@@ -1,4 +1,5 @@
-const isDev = process.env.NODE_ENV === 'development'
+const isDev = process.env.NODE_ENV === 'development';
+const checkProxy = require('check-proxy').check;
 
 module.exports = {
   mode: isDev ? 'development' : 'production',
@@ -20,7 +21,11 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+        // query: {
+        //   babelrc: false,
+        //   presets: [['es2015', {modules: false}], 'react', 'stage-3']
+        // }
       }
     ]
   }
-}
+};
