@@ -735,7 +735,6 @@ const check = async (proxies, res, session) => {
       promiseResult.push(await results[i]);
     }
     console.log('results are', promiseResult);
-    console.log('returnResults are', returnResults);
     // res.send(promiseResult);
     return promiseResult;
   } catch (err) {
