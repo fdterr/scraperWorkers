@@ -28,7 +28,8 @@ router.post('/check', async (req, res, next) => {
   try {
     const checkProxy = require('../scraper/app');
     console.log('request body is', req.body);
-    checkProxy(req.body.proxies, res, req.session);
+    const proxyResults = await checkProxy(req.body.proxies, res, req.session);
+    res.json(proxyResults);
   } catch (err) {
     next(err);
   }

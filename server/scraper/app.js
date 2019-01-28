@@ -870,11 +870,13 @@ const check = async (proxies, res, session) => {
     // });
     // let returnResults = [];
     for (let i = 0; i < results.length; i++) {
-      promiseResult.push((await results[i]).toString());
+      // promiseResult.push((await results[i]).toString());
+      promiseResult.push(await results[i]);
     }
     console.log('results are', promiseResult);
     // console.log('returnResults are', returnResults);
-    res.send(promiseResult);
+    // res.send(promiseResult);
+    return promiseResult;
   } catch (err) {
     console.log(err);
   }
@@ -925,60 +927,63 @@ const verifyProxy = async proxy => {
       ]
     });
     // console.log('result is', result);
-    return JSON.stringify({result, proxy});
+    // return JSON.stringify({result, proxy});
+    return {result, proxy};
   } catch (err) {
     // console.log('caught an error', err);
-    return JSON.stringify({error: err, proxy});
+    // return JSON.stringify({error: err, proxy});
+    return {err, proxy};
   }
-
-  // return new Promise((resolve, reject) => {
-  //   checkProxy({
-  //     ...proxy,
-  //     testHost: 'http://localhost:8080/api/proxy/ping',
-  //     // testHost: '204.48.22.234/api/proxy/ping',
-  //     localIP: '65.88.88.177',
-  //     connectTimeout: 6,
-  //     timeout: 10,
-  //     websites: [
-  //       {
-  //         name: 'example',
-  //         url: 'http://www.example.com/',
-  //         regex: /example/gim // expected result - regex
-  //       },
-  //       // {
-  //       //   name: 'yandex',
-  //       //   url: 'http://www.yandex.ru/',
-  //       //   regex: /yandex/gim // expected result - regex
-  //       // },
-  //       {
-  //         name: 'google',
-  //         url: 'http://www.google.com/',
-  //         regex: function(html) {
-  //           // expected result - custom function
-  //           return html && html.indexOf('google') != -1;
-  //         }
-  //       },
-  //       {
-  //         name: 'amazon',
-  //         url: 'http://www.amazon.com/',
-  //         regex: 'Amazon' // expected result - look for this string in the output
-  //       }
-  //     ]
-  //   }).then(
-  //     function(res) {
-  //       let ipAddress = proxy.proxyIP + ':' + proxy.proxyPort;
-  //       resolve({id: workerData.id, ...res, ipAddress});
-  //     }.bind({resolve: resolve, reject: reject}),
-  //     function(err) {
-  //       let ipAddress = proxy.proxyIP + ':' + proxy.proxyPort;
-  //       resolve({
-  //         // id: workerData.id,
-  //         err: err.toString(),
-  //         ipAddress
-  //       });
-  //     }.bind({resolve: resolve, reject: reject})
-  //   );
-  // });
+};
+const verifyProxyBind = proxy => {
+  return new Promise((resolve, reject) => {
+    checkProxy({
+      ...proxy,
+      testHost: 'http://localhost:8080/api/proxy/ping',
+      // testHost: '204.48.22.234/api/proxy/ping',
+      localIP: '65.88.88.177',
+      connectTimeout: 6,
+      timeout: 10,
+      websites: [
+        {
+          name: 'example',
+          url: 'http://www.example.com/',
+          regex: /example/gim // expected result - regex
+        },
+        // {
+        //   name: 'yandex',
+        //   url: 'http://www.yandex.ru/',
+        //   regex: /yandex/gim // expected result - regex
+        // },
+        {
+          name: 'google',
+          url: 'http://www.google.com/',
+          regex: function(html) {
+            // expected result - custom function
+            return html && html.indexOf('google') != -1;
+          }
+        },
+        {
+          name: 'amazon',
+          url: 'http://www.amazon.com/',
+          regex: 'Amazon' // expected result - look for this string in the output
+        }
+      ]
+    }).then(
+      function(res) {
+        let ipAddress = proxy.proxyIP + ':' + proxy.proxyPort;
+        resolve({id: workerData.id, ...res, ipAddress});
+      }.bind({resolve: resolve, reject: reject}),
+      function(err) {
+        let ipAddress = proxy.proxyIP + ':' + proxy.proxyPort;
+        resolve({
+          // id: workerData.id,
+          err: err.toString(),
+          ipAddress
+        });
+      }.bind({resolve: resolve, reject: reject})
+    );
+  });
 };
 
 const proxyHelper = async proxy => {
