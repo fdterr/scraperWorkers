@@ -757,7 +757,7 @@ const verifyProxy = async proxy => {
       ...proxy,
       // testHost: 'http://localhost:8080/api/proxy/ping',
       testHost: '204.48.22.234/api/proxy/ping',
-      localIP: '204.48.22.234',
+      localIP: '108.54.113.21',
       connectTimeout: 6,
       timeout: 10,
       websites: [
@@ -871,7 +871,6 @@ module.exports = check;
 //       toScan.push(proxies[i]);
 //     }
 
-
 // check([
 //   '139.180.228.42:1080',
 //   '167.160.64.164:1080',
@@ -879,7 +878,6 @@ module.exports = check;
 //   '196.17.197.61:1080',
 //   '196.19.0.97:1080'
 // ]);
-
 
 // const createWorker = (id, ipAddress) => {
 //   let w = new Worker(__dirname + '/worker.js', {

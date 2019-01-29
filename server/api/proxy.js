@@ -13,16 +13,17 @@ if (typeof ipaddress === 'undefined') {
   ipaddress = '127.0.0.1';
 }
 
-const ping = (req, res) => {
-  console.log('ip', req.connection.remoteAddress);
-  let headers = _(req.headers).reduce(function(result, el) {
-    return result + el;
-  });
-  console.log('headers', headers);
-  console.log('query', req.query);
-  console.log('cookies', req.cookies);
-  res.json(getProxyType(req.headers, req.query, req.body, req.cookies));
-};
+// const ping = (req, res) => {
+// const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+// console.log('ip', ip);
+//   let headers = _(req.headers).reduce(function(result, el) {
+//     return result + el;
+//   });
+//   console.log('headers', headers);
+//   console.log('query', req.query);
+//   console.log('cookies', req.cookies);
+//   res.json(getProxyType(req.headers, req.query, req.body, req.cookies));
+// };
 
 router.post('/check', async (req, res, next) => {
   try {
@@ -35,5 +36,5 @@ router.post('/check', async (req, res, next) => {
   }
 });
 
-router.get('/ping', ping);
-router.post('/ping', ping);
+// router.get('/ping', ping);
+// router.post('/ping', ping);
