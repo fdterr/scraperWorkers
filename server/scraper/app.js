@@ -758,6 +758,7 @@ const verifyProxy = async proxy => {
       // testHost: 'http://localhost:8080/api/proxy/ping',
       testHost: '204.48.22.234/api/proxy/ping',
       localIP: '204.48.22.234',
+      // localIP:'108.54.113.21',
       connectTimeout: 6,
       timeout: 10,
       websites: [

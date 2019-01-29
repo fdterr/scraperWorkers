@@ -14,7 +14,14 @@ if (typeof ipaddress === 'undefined') {
 }
 
 const ping = (req, res) => {
-  console.log('ip', req.connection.remoteAddress);
+  try {
+  console.log('headers',req.headers)
+  console.log('remoteAddress', req.connection.remoteAddress);
+
+  } catch(err) {
+    console.log(err);
+  };
+  // console.log('ip', ip);
   let headers = _(req.headers).reduce(function(result, el) {
     return result + el;
   });
