@@ -41,5 +41,5 @@ router.post('/check', async (req, res, next) => {
   }
 });
 
-// router.get('/ping', ping);
-// router.post('/ping', ping);
+router.get('/ping', ping);
+router.post('/ping', ping);
