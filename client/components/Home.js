@@ -7,11 +7,13 @@ class Home extends Component {
     super();
     this.state = {
       proxyObjects: {},
-      proxies: []
+      proxies: [],
+      proxyTests: {}
     };
   }
+
   render() {
-    console.log('state is', this.state);
+    // console.log('state is', this.state);
     return (
       <div>
         <div>
@@ -21,65 +23,88 @@ class Home extends Component {
           </form>
         </div>
         {Object.keys(this.state.proxyObjects).length > 0 ? (
-          <CheckTable proxies={this.state.proxies} />
+          <CheckTable proxies={Object.values(this.state.proxyObjects)} />
         ) : (
           <div />
         )}
       </div>
     );
   }
+
   checkProxy = async proxy => {
-    // return new Promise((resolve, reject) => {
-    // })
-    console.log('checking proxy');
+    console.log('cP proyx is', proxy);
+    const dataPromise = axios.post('/api/proxy/checkone', {proxy});
+    console.log('request sent for', proxy);
+    const {data} = await dataPromise;
+    console.log('response received ', data);
 
-    let myProxy = [];
-    myProxy.push(proxy);
-    const {data} = await axios.post('/api/proxy/check', {proxies: myProxy});
-
-    console.log('data is', data[0]);
     let newState = {...this.state};
-    console.log('new state inside check is', newState);
-    // newState.proxyObjects[data[0].proxy.proxyIP];
+    let proxies = this.state.proxyObjects;
 
-    let proxies = this.state.proxies;
+    console.log('data is', data);
+    // const {result} = data;
+
+    const proxyIP = data.proxy.proxyIP;
+    const proxyPort = data.proxy.proxyPort;
+    const proxyString = `${proxyIP}:${proxyPort}`;
+
+    let proxyStatus;
+    let anonymityLevel;
+    let country;
+    let connectTime;
+
+    if (data.result) {
+      let result = data.result[0];
+      proxyStatus = 'Good';
+      anonymityLevel = result.anonymityLevel;
+      country = result.country;
+      connectTime = result.connectTime;
+    } else if (data.error) {
+      proxyStatus = 'Bad';
+      anonymityLevel = '---';
+      country = '---';
+      connectTime = '---';
+    }
+
     let newProxy = {
-      proxyIP: data[0].proxy.proxyIP,
-      proxyPort: data[0].proxy.proxyPort,
-      proxyStatus: 'bad',
-      anonymityLevel: 1,
-      country: 'USA',
-      speed: 'slow'
+      proxyIP,
+      proxyPort,
+      proxyStatus,
+      anonymityLevel,
+      country,
+      connectTime
     };
-    proxies.push(newProxy);
+    proxies[proxyString] = newProxy;
 
-    newState.proxies = proxies;
+    newState.proxyObjects = proxies;
     this.setState(newState);
   };
 
   handleSubmit = evt => {
     evt.preventDefault();
     const proxies = evt.target.proxies.value.split('\n');
-    console.log('proxies is', proxies);
+
     let proxyObjects = {};
-    for (let i = 0; i < proxies.length; i++) {
-      proxyObjects[proxies[i]] = true;
-    }
 
-    console.log('pre-set state proxyObects', this.state);
-    this.setState({...this.state, proxyObjects});
-
-    for (let i = 0; i < proxies.length; i++) {
-      this.checkProxy(proxies[i]);
-    }
-
-    // axios.all(promises).then();
-
-    // console.log('1');
-    // console.log('2');
-    // console.log('3');
-    // console.log('4');
-    // console.log('5');
+    proxies.forEach(proxy => {
+      console.log('foreach proxy is', proxy);
+      this.checkProxy(proxy);
+      let split = proxy.split(':');
+      let proxyIP = split[0];
+      let proxyPort = split[1];
+      proxyObjects[proxy] = {
+        proxyIP,
+        proxyPort,
+        proxyStatus: 'testing',
+        anonymityLevel: '',
+        country: '',
+        speed: ''
+      };
+      this.setState({
+        ...this.state,
+        proxyObjects
+      });
+    });
   };
 }
 

@@ -3,7 +3,7 @@ import ReactTable from 'react-table';
 
 const CheckTable = props => {
   const data = props.proxies;
-  console.log('received props', data);
+  // console.log('received props', data);
   return (
     <div>
       <ReactTable
@@ -15,7 +15,7 @@ const CheckTable = props => {
           },
           {
             Header: 'Port',
-            acessor: 'proxyPort'
+            accessor: 'proxyPort'
           },
           {
             Header: 'Status',
@@ -31,7 +31,7 @@ const CheckTable = props => {
           },
           {
             Header: 'Speed',
-            accessor: 'speed'
+            accessor: 'connectTime'
           }
         ]}
         defaultPageSize={10}

@@ -1,5 +1,6 @@
 const getProxyType = require('check-proxy').ping;
 const router = require('express').Router();
+const {check, checkOne} = require('../scraper/app');
 var _ = require('lodash');
 module.exports = router;
 
@@ -32,10 +33,18 @@ const ping = (req, res) => {
 
 router.post('/check', async (req, res, next) => {
   try {
-    const checkProxy = require('../scraper/app');
+    const result = await check(req.body.proxies);
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/checkone', (req, res, next) => {
+  try {
     console.log('request body is', req.body);
-    const proxyResults = await checkProxy(req.body.proxies, res, req.session);
-    res.json(proxyResults);
+    checkOne(req.body.proxy, res, req.session);
+    // res.json(await proxyResults);
   } catch (err) {
     next(err);
   }
