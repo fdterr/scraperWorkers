@@ -1,25 +1,12 @@
-import React from 'react';
+import React, {Component} from 'react';
 import ReactTable from 'react-table';
 import Spinner from './Spinner';
-// import ok from '../../public/ok.svg';
-// const ok = require('../../public/ok.png');
-
-// import fail from './fail.png';
 
 const CheckTable = props => {
   const data = props.proxies;
-  let okPic = okPic;
-  // const ok = (
-  //   <img src={require('../../public/ok.png')} alt="emSync Logo" width="32" />
-  // );
-  // const fail = (
-  //   <img src={require('../../public/fail.png')} alt="emSync Logo" width="32" />
-  // );
-  const ok = <img src="ok.png" alt="emSync Logo" width="32" />;
-  const fail = <img src="fail.png" alt="emSync Logo" width="32" />;
-  console.log('received props', data);
   return (
     <div>
+      <div />
       <ReactTable
         data={data}
         columns={[
@@ -38,9 +25,9 @@ const CheckTable = props => {
               return row.value === 'testing' ? (
                 <Spinner />
               ) : row.value === 'Good' ? (
-                ok
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABTUlEQVRYR+2UsU6EQBCGB0oSY6EN9waUMM/hVcbWWBjfwPMRPN/A2FxtrM7n2KUivIFanM0VhG7MIpuQDWFn90holoYEZuf/5h9+Ilj4ihbWhwAQHAgOeDuAiG9EdK1iTEQfZVne+0TaGQARaUpICOHUk12cZVmaJMkXZ8q2bdOqqn44tWwA2+SmGNcJFoCruIbhQMwK8PSy7rSfH/fdfRaAPM93cRzf2vapxYkItpvPrpyIdlLKu6mzVgcQ8QAAF6qJOaFuPCbev/sVQlyeCnAEgLMhwNDmCXFVdhRCnJ8EYK5AC5pN9d6Hz2dZgWpopmCzvYIo+t/ecOc+UbR+A2MAeh1T4rOlQE/l+i/gRFD1ZjnQu5ACAOtX3DTNqq7rb1t0nQC4TnAn1/3YDpjTFEXxCgA3/fN3KeUDZ2KzxhvAR2zsTAAIDgQHFnfgD6ABhCEKCALMAAAAAElFTkSuQmCC" />
               ) : (
-                fail
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA90lEQVRYR+1VSw6CMBCdRqJGFxi3JsLCg3AJNrCUY8ESNlxKuICy0PjNGDAoiVWmXTgxabd9M+/Na/sqgHkJZn4wAowDxoH/cgB9fyDy/PYtOyiYbj3ZgbpxObSviHBys3gsE7EJoqMQMFqeK6tPaFtPFlCEEbZFMhEteYtx0pjUmwSqmxbheg8gJs/JESoni2fNXhDtQID9cgUPTppMKTFPFvBJREOiSf4oVVzv03bmRty6WTJXaaksQG45AGqQaznALoD1CGQv4WeXkP0ZsgcRep5VLlYXtiiuz5ry0VAwWp+RSrioYLWCSIWgD2sEGAeMA+wO3AElA4whLgEApQAAAABJRU5ErkJggg==" />
               );
             }
           },
@@ -57,7 +44,7 @@ const CheckTable = props => {
             accessor: 'connectTime'
           }
         ]}
-        defaultPageSize={10}
+        defaultPageSize={50}
         className="-striped -highlight"
       />
     </div>
@@ -65,3 +52,4 @@ const CheckTable = props => {
 };
 
 export default CheckTable;
+//

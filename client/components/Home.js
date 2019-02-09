@@ -14,11 +14,15 @@ class Home extends Component {
   }
 
   render() {
-    const ok = <img src="/ok.png" alt="emSync Logo" width="32" />;
-    const fail = <img src="fail.png" alt="emSync Logo" width="32" />;
+    const ok = <img src="/ok.png" alt="emSync Logo" width="32" hidden />;
+    const fail = <img src="fail.png" alt="emSync Logo" width="32" hidden />;
     // console.log('state is', this.state);
     return (
       <div>
+        <div>
+          {/* <img src="/ok.png" alt="emSync Logo" width="32" hidden /> */}
+          {/* <img src="fail.png" alt="emSync Logo" width="32" hidden /> */}
+        </div>
         <div>
           <form onSubmit={this.handleSubmit}>
             <textarea name="proxies" />
@@ -27,15 +31,6 @@ class Home extends Component {
         </div>
         {Object.keys(this.state.proxyObjects).length > 0 ? (
           <CheckTable proxies={Object.values(this.state.proxyObjects)} />
-        ) : (
-          <div />
-        )}
-        {this.state.firstLoad ? (
-          <div>
-            {ok}
-            <br />
-            {fail}
-          </div>
         ) : (
           <div />
         )}

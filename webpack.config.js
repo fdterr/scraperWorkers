@@ -1,6 +1,22 @@
 const isDev = process.env.NODE_ENV === 'development';
 const checkProxy = require('check-proxy').check;
 
+exports.loadImages = ({include, exclude, options} = {}) => ({
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpg)$/,
+        include,
+        exclude,
+        use: {
+          loader: 'url-loader',
+          options
+        }
+      }
+    ]
+  }
+});
+
 module.exports = {
   mode: isDev ? 'development' : 'production',
   entry: [
@@ -21,10 +37,6 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
-        // query: {
-        //   babelrc: false,
-        //   presets: [['es2015', {modules: false}], 'react', 'stage-3']
-        // }
       }
     ]
   }
