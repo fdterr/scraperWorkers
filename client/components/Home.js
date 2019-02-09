@@ -8,11 +8,14 @@ class Home extends Component {
     this.state = {
       proxyObjects: {},
       proxies: [],
-      proxyTests: {}
+      proxyTests: {},
+      firstLoad: true
     };
   }
 
   render() {
+    const ok = <img src="/ok.png" alt="emSync Logo" width="32" />;
+    const fail = <img src="fail.png" alt="emSync Logo" width="32" />;
     // console.log('state is', this.state);
     return (
       <div>
@@ -27,8 +30,21 @@ class Home extends Component {
         ) : (
           <div />
         )}
+        {this.state.firstLoad ? (
+          <div>
+            {ok}
+            <br />
+            {fail}
+          </div>
+        ) : (
+          <div />
+        )}
       </div>
     );
+  }
+
+  componentDidMount() {
+    this.setState({...this.state, firstLoad: false});
   }
 
   checkProxy = async proxy => {
