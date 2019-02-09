@@ -23,11 +23,25 @@ const CheckTable = props => {
             accessor: 'proxyStatus',
             Cell: row => {
               return row.value === 'testing' ? (
-                <Spinner />
+                <div className="statusIcon">
+                  <Spinner />
+                </div>
               ) : row.value === 'Good' ? (
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABTUlEQVRYR+2UsU6EQBCGB0oSY6EN9waUMM/hVcbWWBjfwPMRPN/A2FxtrM7n2KUivIFanM0VhG7MIpuQDWFn90holoYEZuf/5h9+Ilj4ihbWhwAQHAgOeDuAiG9EdK1iTEQfZVne+0TaGQARaUpICOHUk12cZVmaJMkXZ8q2bdOqqn44tWwA2+SmGNcJFoCruIbhQMwK8PSy7rSfH/fdfRaAPM93cRzf2vapxYkItpvPrpyIdlLKu6mzVgcQ8QAAF6qJOaFuPCbev/sVQlyeCnAEgLMhwNDmCXFVdhRCnJ8EYK5AC5pN9d6Hz2dZgWpopmCzvYIo+t/ecOc+UbR+A2MAeh1T4rOlQE/l+i/gRFD1ZjnQu5ACAOtX3DTNqq7rb1t0nQC4TnAn1/3YDpjTFEXxCgA3/fN3KeUDZ2KzxhvAR2zsTAAIDgQHFnfgD6ABhCEKCALMAAAAAElFTkSuQmCC" />
+                <div className="statusIcon">
+                  <img
+                    // className="statusIcon"
+                    width="30px"
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACwklEQVRYR+2XTWgTQRTH38ta462tHoS2FqNeVLBhl9Lag9GrVdGDxHpSRPFmPPTc9OTR9KQUQS8lUA+1iKIXqYe2frCTNcceqkRRqaiJiKapmSezJOlmM9mPJBAE95bNzPv/5v/evJlFaPODbdaHfw9A07TTRDSAiEet7hHRAufcMAxj3o+rnhwIh8NdgUDgGiLGvQQnojjnfMowjKzbeFcAVVUvAMBNROxyC2ZzRIhfZ4zdc5rnCKCqahwRJ/wI28cKNxhjk/Vi1AVohXhZlIgmGWPS9EkBhO2IeLeZlUucuChLRw1AqeDe+s25GywRZTnnIXth1gC0wvqdPZ0weGQPpF9lILP6tcImS0UNgKZp5LYap//7QtshemkYOrZugfzvAiQmnlgBsoyxbuv8KgDRZABgrlEAq7iIsbqyBrN3XtjDndF1/UH5ZRVAM/bbxT9mvkNyegk2CsUqAHsa7AALiBixzhiK7AV1JARLz1bgzcuM1Jye/m4Yu3LYtF08nz9kYeb2Yo14afK8ruvCafNxBRi/MQqKopiDn86lIbX8rgpCiEcvD0Mw2FERT04vw3p+QwpLRM8ZY5VzxBXg2OgBGIrsqwR7fD8F6dfvzd9+xcUc3wBi0vGzYTg02G+KEhE8TDL49uUnjF0d8bxyix2OKajb+0+eU+Gg2leBKKz/geA2b7Zbc+FYhE7bEBHgRHQTohxUFJxTziWFUH8bisFOjUhAnDqvwf6BXjPu2qcfMHNrsW7BScRzuq5XHeu+WzEimm12V2gHPJpNQf6XvNplW8BTKxaHkaIoYq91SvdR4y9zxWJxt+thJOK39TguL7CZtmw3yfeFpJUQTuI1rViW3lI6Eg3URI6IYk1dSstApVtSDBFjHkCEcIJznmjJtdzuSunDJAwAmwcKYpaIDEQ0rGe9lw3j+l3gJUgzY/4D/AWAh14wsjmnkgAAAABJRU5ErkJggg=="
+                  />
+                </div>
               ) : (
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA90lEQVRYR+1VSw6CMBCdRqJGFxi3JsLCg3AJNrCUY8ESNlxKuICy0PjNGDAoiVWmXTgxabd9M+/Na/sqgHkJZn4wAowDxoH/cgB9fyDy/PYtOyiYbj3ZgbpxObSviHBys3gsE7EJoqMQMFqeK6tPaFtPFlCEEbZFMhEteYtx0pjUmwSqmxbheg8gJs/JESoni2fNXhDtQID9cgUPTppMKTFPFvBJREOiSf4oVVzv03bmRty6WTJXaaksQG45AGqQaznALoD1CGQv4WeXkP0ZsgcRep5VLlYXtiiuz5ry0VAwWp+RSrioYLWCSIWgD2sEGAeMA+wO3AElA4whLgEApQAAAABJRU5ErkJggg==" />
+                <div className="statusIcon">
+                  <img
+                    // className="statusIcon"
+                    width="30px"
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABfklEQVRYR+2WQU4CQRBF6w+wk+gBjGfgAhq9Bisx4VQk6oprYPQCnIF4AI0stYs0oSdD211VPRkzLmAL9H/9q+pXg3r+oGd9OgH8fwc204f7igbry+ViXdIv79P5xNHP5Gr5+Cz9T3TAizOqJyb+GHJ1Z4Xw4t9wKxAuwG4mQWQBgnigt0I0xcN/JYgkQCxuhUiJaxBJgP1BxC8Ancf1yzkhiTPT55BwmyphtgQlEG3F/eXEJrRA+ENCw/1yS7h5XRpttCQIR/zlbwDCuI246kA4VHGCwDjyUqp5DGpOQitEibjZgciJN4DOEtPhndgOCNfWwGoHAPcKxjjVvr4nRlzd/AnA0ajx4f6JAloT0zwF/ofJOe8IQm1CKWSIaes5Mj1hWmB6EB22Wm7O90FUGNvNs+QoVsRDs1kSM9eY+WVkFDeGVbYcZetYyXbJidybwP4gMSyWemKinih+kARb6yeZUTxVjtZPsiZEb49SbVV38b0aRF2ISGecAHp3YAfwJF8wPySfHgAAAABJRU5ErkJggg=="
+                  />
+                </div>
               );
             }
           },
