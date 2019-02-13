@@ -14,18 +14,12 @@ class Home extends Component {
   }
 
   render() {
-    const ok = <img src="/ok.png" alt="emSync Logo" width="32" hidden />;
-    const fail = <img src="fail.png" alt="emSync Logo" width="32" hidden />;
-    // console.log('state is', this.state);
     return (
       <div>
-        <div>
-          {/* <img src="/ok.png" alt="emSync Logo" width="32" hidden /> */}
-          {/* <img src="fail.png" alt="emSync Logo" width="32" hidden /> */}
-        </div>
+        <div />
         <div>
           <form onSubmit={this.handleSubmit}>
-            <textarea name="proxies" />
+            <textarea name="proxies" rows="15" cols="100" />
             <button type="submit">Submit Your Stuff!</button>
           </form>
         </div>
@@ -98,23 +92,27 @@ class Home extends Component {
     let proxyObjects = {};
 
     proxies.forEach(proxy => {
-      console.log('foreach proxy is', proxy);
-      this.checkProxy(proxy);
-      let split = proxy.split(':');
-      let proxyIP = split[0];
-      let proxyPort = split[1];
-      proxyObjects[proxy] = {
-        proxyIP,
-        proxyPort,
-        proxyStatus: 'testing',
-        anonymityLevel: '',
-        country: '',
-        speed: ''
-      };
-      this.setState({
-        ...this.state,
-        proxyObjects
-      });
+      const regex = /[0-9]+(?:\.[0-9]+){3}:[0-9]+/g;
+      let verified = proxy.match(regex);
+      if (verified) {
+        console.log('verified proxy is', verified);
+        this.checkProxy(proxy);
+        let split = proxy.split(':');
+        let proxyIP = split[0];
+        let proxyPort = split[1];
+        proxyObjects[proxy] = {
+          proxyIP,
+          proxyPort,
+          proxyStatus: 'testing',
+          anonymityLevel: '',
+          country: '',
+          speed: ''
+        };
+        this.setState({
+          ...this.state,
+          proxyObjects
+        });
+      }
     });
   };
 }

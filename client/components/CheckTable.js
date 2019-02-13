@@ -58,7 +58,7 @@ const CheckTable = props => {
             accessor: 'connectTime'
           }
         ]}
-        defaultPageSize={50}
+        defaultPageSize={Math.min(50, Object.keys(data).length)}
         className="-striped -highlight"
       />
     </div>
