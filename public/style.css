@@ -167,3 +167,7 @@ form div {
   height: 100%;
   align-items: center;
 }
+
+.flagDiv {
+  margin-right: 5px;
+}
