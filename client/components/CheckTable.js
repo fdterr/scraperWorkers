@@ -323,7 +323,7 @@ const CheckTable = props => {
                     <img
                       src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAgFAAE8CAgAOw=="
                       className={`flag flag-${row.value.toLowerCase()}`}
-                      alt="Czech Republic"
+                      alt="Flag"
                     />
                   </div>
                   {countries[row.value]}
