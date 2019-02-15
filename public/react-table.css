@@ -109,6 +109,8 @@
 .ReactTable .rt-thead .rt-resizable-header-content {
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 18;
+  font-weight: bold;
 }
 .ReactTable .rt-thead .rt-header-pivot {
   border-right-color: #f7f7f7;
@@ -199,6 +201,7 @@
   overflow: hidden;
   transition: 0.3s ease;
   transition-property: width, min-width, padding, opacity;
+  align-items: center;
 }
 .ReactTable .rt-th.-hidden,
 .ReactTable .rt-td.-hidden {

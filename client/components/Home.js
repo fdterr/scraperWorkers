@@ -19,7 +19,7 @@ class Home extends Component {
         <div>
           <form onSubmit={this.handleSubmit} className="proxyForm">
             <textarea name="proxies" rows="15" cols="100" />
-            <button type="submit">Submit Your Stuff!</button>
+            <button type="submit">Check Your Proxies!</button>
           </form>
         </div>
         <div className="checkTable">

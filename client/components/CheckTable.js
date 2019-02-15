@@ -12,11 +12,17 @@ const CheckTable = props => {
         columns={[
           {
             Header: 'Proxy IP',
-            accessor: 'proxyIP'
+            accessor: 'proxyIP',
+            Cell: row => {
+              return <div className="rowMiddle">{row.value}</div>;
+            }
           },
           {
             Header: 'Port',
-            accessor: 'proxyPort'
+            accessor: 'proxyPort',
+            Cell: row => {
+              return <div className="columnCenter rowMiddle">{row.value}</div>;
+            }
           },
           {
             Header: 'Status',
@@ -47,15 +53,24 @@ const CheckTable = props => {
           },
           {
             Header: 'Anonymity Level',
-            accessor: 'anonymityLevel'
+            accessor: 'anonymityLevel',
+            Cell: row => {
+              return <div className="rowMiddle">{row.value}</div>;
+            }
           },
           {
             Header: 'Country',
-            accessor: 'country'
+            accessor: 'country',
+            Cell: row => {
+              return <div className="rowMiddle">{row.value}</div>;
+            }
           },
           {
             Header: 'Speed',
-            accessor: 'connectTime'
+            accessor: 'connectTime',
+            Cell: row => {
+              return <div className="rowMiddle">{row.value}</div>;
+            }
           }
         ]}
         defaultPageSize={Math.min(50, Object.keys(data).length)}
