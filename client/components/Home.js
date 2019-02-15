@@ -15,19 +15,23 @@ class Home extends Component {
 
   render() {
     return (
-      <div>
-        <div />
+      <div className="checkProxy">
         <div>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit} className="proxyForm">
             <textarea name="proxies" rows="15" cols="100" />
             <button type="submit">Submit Your Stuff!</button>
           </form>
         </div>
+        <div className="checkTable">
         {Object.keys(this.state.proxyObjects).length > 0 ? (
-          <CheckTable proxies={Object.values(this.state.proxyObjects)} />
+          <CheckTable
+            proxies={Object.values(this.state.proxyObjects)}
+            
+          />
+
         ) : (
           <div />
-        )}
+        )}</div>
       </div>
     );
   }
