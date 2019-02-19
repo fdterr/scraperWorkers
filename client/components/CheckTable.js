@@ -268,6 +268,7 @@ const CheckTable = props => {
           {
             Header: 'Proxy IP',
             accessor: 'proxyIP',
+            width: 135,
             Cell: row => {
               return <div className="rowMiddle">{row.value}</div>;
             }
@@ -275,6 +276,7 @@ const CheckTable = props => {
           {
             Header: 'Port',
             accessor: 'proxyPort',
+            width: 50,
             Cell: row => {
               return <div className="columnCenter rowMiddle">{row.value}</div>;
             }
@@ -282,6 +284,7 @@ const CheckTable = props => {
           {
             Header: 'Status',
             accessor: 'proxyStatus',
+            width: 85,
             Cell: row => {
               return row.value === 'testing' ? (
                 <div className="statusIcon">
@@ -307,15 +310,27 @@ const CheckTable = props => {
             }
           },
           {
-            Header: 'Anonymity Level',
+            Header: 'Anonymous?',
             accessor: 'anonymityLevel',
+            width: 125,
             Cell: row => {
-              return <div className="rowMiddle">{row.value}</div>;
+              return row.value === 'testing' ? (
+                ''
+              ) : (
+                <div
+                  className={`rowMiddle textCenter ${
+                    row.value === 1 ? 'greenText' : 'redText'
+                  }`}
+                >
+                  {row.value === 1 ? 'True' : 'False'}
+                </div>
+              );
             }
           },
           {
             Header: 'Country',
             accessor: 'country',
+            width: 235,
             Cell: row => {
               return (
                 <div className="rowMiddle">
@@ -335,12 +350,31 @@ const CheckTable = props => {
             Header: 'Speed',
             accessor: 'connectTime',
             Cell: row => {
-              return <div className="rowMiddle">{row.value}</div>;
+              let connectTime = (row.value / 7) * 100;
+              return row.value == '---' ? (
+                <div className="rowMiddle">{row.value}</div>
+              ) : (
+                <div
+                  style={{
+                    width: `${connectTime}%`,
+                    height: '15%',
+                    backgroundColor:
+                      row.value > 66
+                        ? '#ff2e00'
+                        : row.value > 33
+                        ? '#ffbf00'
+                        : '#85cc00',
+                    borderRadius: '2px',
+                    transition: 'all .2s ease-out'
+                  }}
+                />
+              );
             }
           }
         ]}
         defaultPageSize={Math.min(50, Object.keys(data).length)}
         className="-striped -highlight"
+        filterable
       />
     </div>
   );

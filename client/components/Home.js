@@ -14,24 +14,25 @@ class Home extends Component {
   }
 
   render() {
+    let proxies =
+      '139.180.228.42:3128\n167.160.64.164:3128\n1.2.172.229:4145\n1.9.216.226:41277\n1.10.188.102:45806\n1.10.188.94:45806\n1.10.186.17:46587\n1.10.187.225:43057\n1.10.186.155:44476';
     return (
       <div className="checkProxy">
         <div>
           <form onSubmit={this.handleSubmit} className="proxyForm">
-            <textarea name="proxies" rows="15" cols="100" />
+            <textarea name="proxies" rows="15" cols="100">
+              {proxies}
+            </textarea>
             <button type="submit">Check Your Proxies!</button>
           </form>
         </div>
         <div className="checkTable">
-        {Object.keys(this.state.proxyObjects).length > 0 ? (
-          <CheckTable
-            proxies={Object.values(this.state.proxyObjects)}
-            
-          />
-
-        ) : (
-          <div />
-        )}</div>
+          {Object.keys(this.state.proxyObjects).length > 0 ? (
+            <CheckTable proxies={Object.values(this.state.proxyObjects)} />
+          ) : (
+            <div />
+          )}
+        </div>
       </div>
     );
   }
@@ -72,6 +73,7 @@ class Home extends Component {
       proxyStatus = 'Bad';
       anonymityLevel = '---';
       country = '---';
+      anonymityLevel = '---';
       connectTime = '---';
     }
 
@@ -108,7 +110,7 @@ class Home extends Component {
           proxyIP,
           proxyPort,
           proxyStatus: 'testing',
-          anonymityLevel: '',
+          anonymityLevel: 'testing',
           country: '',
           speed: ''
         };

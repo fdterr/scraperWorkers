@@ -27,7 +27,7 @@ const check = async (proxies, res, session) => {
       promiseResult.push(await results[i]);
       console.log('received result for ', promiseResult[i]);
     }
-    // console.log('results are', promiseResult);
+    console.log('results are', promiseResult);
     // res.send(promiseResult);
     return promiseResult;
   } catch (err) {

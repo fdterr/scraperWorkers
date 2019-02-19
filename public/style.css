@@ -171,3 +171,18 @@ form div {
 .flagDiv {
   margin-right: 5px;
 }
+
+.textCenter {
+  display: flex;
+  /* text-align: center; */
+  /* align-content: center; */
+  justify-content: center;
+}
+
+.greenText {
+  color: green;
+}
+
+.redText {
+  color: red;
+}
