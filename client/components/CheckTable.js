@@ -350,24 +350,32 @@ const CheckTable = props => {
             Header: 'Speed',
             accessor: 'connectTime',
             Cell: row => {
-              let connectTime = (row.value / 7) * 100;
+              let connectTime = (row.value / 4) * 100;
               return row.value == '---' ? (
                 <div className="rowMiddle">{row.value}</div>
               ) : (
                 <div
+                  className="rowMiddle"
                   style={{
-                    width: `${connectTime}%`,
-                    height: '15%',
-                    backgroundColor:
-                      row.value > 66
-                        ? '#ff2e00'
-                        : row.value > 33
-                        ? '#ffbf00'
-                        : '#85cc00',
-                    borderRadius: '2px',
-                    transition: 'all .2s ease-out'
+                    height: '100%'
                   }}
-                />
+                >
+                  <div
+                    style={{
+                      width: `${Math.min(90, connectTime)}%`,
+                      height: '25%',
+                      backgroundColor:
+                        connectTime > 66
+                          ? '#ff2e00'
+                          : row.value > 33
+                          ? '#ffbf00'
+                          : '#85cc00',
+                      borderRadius: '2px',
+                      transition: 'all .2s ease-out'
+                    }}
+                  />
+                  <div className="connectTime">{row.value}</div>
+                </div>
               );
             }
           }
