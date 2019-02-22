@@ -143,17 +143,23 @@ form div {
 .checkProxy {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
 .proxyForm {
   display: flex;
   flex-direction: column;
+  /* width: 90vw; */
+  width: 15vw;
 }
 
 .checkTable {
-  width: 75vw;
+  width: 70vw;
+  /* margin-top: 2vh; */
+  /* margin-left: auto; */
+  margin-left: 5vw;
+  /* margin-right: auto; */
 }
 
 .columnCenter {
