@@ -258,12 +258,13 @@ const countries = {
 };
 
 const CheckTable = props => {
-  const data = props.proxies;
+  console.log('table props are', props.proxies);
+  const proxyData = props.proxies.slice();
   return (
     <div>
       <div />
       <ReactTable
-        data={data}
+        data={proxyData}
         columns={[
           {
             Header: 'Proxy IP',
@@ -380,7 +381,7 @@ const CheckTable = props => {
             }
           }
         ]}
-        defaultPageSize={Math.min(50, Object.keys(data).length)}
+        defaultPageSize={25}
         className="-striped -highlight"
         filterable
       />
